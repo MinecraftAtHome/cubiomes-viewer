@@ -69,7 +69,7 @@ CUPATH              = $$PWD/cubiomes
 QMAKE_PRE_LINK += cmake -S $$CUPATH -B lib_build -DCMAKE_BUILD_TYPE=Release && cmake --build lib_build
 # QMAKE_PRE_LINK      += $(MAKE) -C $$CUPATH -f $$CUPATH/makefile CC=\"$$QMAKE_CC\" CFLAGS=\"$(CFLAGS) $$QMAKE_CFLAGS\" $$CUTARGET
 QMAKE_CLEAN         += $$CUPATH/*.o $$CUPATH/build/build/libcubiomes.a
-LIBS                += -L$$PWD/lib_build -lcubiomes_static -lm
+LIBS                += -L$$OUT_PWD/lib_build -lcubiomes_static -lm
 
 LUAPATH = $$PWD/lua/src
 
