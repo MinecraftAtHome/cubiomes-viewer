@@ -9,7 +9,7 @@ on:
 
 defaults:
   run:
-    shell: cmd
+    shell: msys2 {0}
 
 env:
   PROG:         cubiomes-viewer
@@ -18,8 +18,7 @@ env:
 
 jobs:
   build:
-    runs-on: windows-2022
-
+    runs-on: windows-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -37,12 +36,23 @@ jobs:
           archives:     'x86_64 qtbase qttools'
           cache:        true
           setup-python: false
+      - name: Install Msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-cross-mingwarm64-gcc
+
 
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
               qmake CONFIG+=release ${{env.SOURCE_DIR}}
-              mingw32-make
+              make
               
       - name: Deploy
         working-directory: ${{env.SOURCE_DIR}}
