@@ -92,6 +92,7 @@ enum
     F_BIOME_SAMPLE,
     F_NOISE_SAMPLE,
     F_CHAMBERS,
+    F_CAMP,
     // new filters should be added here at the end to keep some downwards compatibility
     FILTER_MAX,
 };

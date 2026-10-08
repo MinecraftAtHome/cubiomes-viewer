@@ -255,6 +255,7 @@ lua_State *loadScript(QString path, QString *err)
             {End_City, "End_City"},
             {End_Gateway, "End_Gateway"},
             {Ancient_City, "Ancient_City"},
+            {Abandoned_Camp, "Abandoned_Camp"}
         };
         for (size_t i = 0; i < sizeof(values)/sizeof(values[0]); i++)
         {

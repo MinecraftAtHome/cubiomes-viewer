@@ -13,6 +13,23 @@
   </description>
 
   <releases>
+    <release version="5.0.0" date="2026-10-08">
+      <description>
+        <p>Changes:</p>
+        <ul>
+          <li>Added arm64 macOS binary</li>
+          <li>Updated underlying Cubiomes Library to support features beyond 1.21 WD/1.12.3 (see below)</li>
+          <li>Add Abandoned Camp Structure Support</li>
+          <li>Add 26.3 support</li>
+          <li>Add 26.2 support</li>
+          <li>Add 26.1 support</li>
+          <li>Add 1.21.11 support</li>
+          <li>Add 1.21.9 support</li>
+          <li>Add 1.21.6 support</li>
+          <li>Add 1.21.5 support</li>
+        </ul>
+      </description>
+    </release>
     <release version="4.1.2" date="2024-11-10">
       <description>
         <p>Changes:</p>
