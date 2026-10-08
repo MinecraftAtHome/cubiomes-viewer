@@ -29,7 +29,6 @@ QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
 win32: {
     CONFIG += static_gnu
-
     # thank you nullprogram for dealing with the Windows UTF-16 nonsense
     LIBWINSANE          = $$PWD/src/libwinsane
     libwinsane.target   = libwinsane
@@ -70,7 +69,7 @@ CUPATH              = $$PWD/cubiomes
 QMAKE_PRE_LINK += cmake -S $$CUPATH -B lib_build -DCMAKE_BUILD_TYPE=Release && cmake --build lib_build
 # QMAKE_PRE_LINK      += $(MAKE) -C $$CUPATH -f $$CUPATH/makefile CC=\"$$QMAKE_CC\" CFLAGS=\"$(CFLAGS) $$QMAKE_CFLAGS\" $$CUTARGET
 QMAKE_CLEAN         += $$CUPATH/*.o $$CUPATH/build/build/libcubiomes.a
-LIBS                += lib_build/libcubiomes_static.a -lm
+LIBS                += -L$$PWD/lib_build -lcubiomes_static -lm
 
 LUAPATH = $$PWD/lua/src
 
