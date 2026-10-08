@@ -1099,7 +1099,7 @@ testCondAt(
 
     if ((st = finfo.stype) > 0)
     {
-        if (!getStructureConfig_override(finfo.stype, env->mc, &sconf))
+        if (!getStructureConfig(finfo.stype, env->mc, &sconf))
             return COND_FAILED;
     }
     else memset(&sconf, 0, sizeof(sconf)); // never relevant, but clang-analyzer complains
@@ -2169,7 +2169,7 @@ L_qm_any:
 void findQuadStructs(int styp, Generator *g, QVector<QuadInfo> *out)
 {
     StructureConfig sconf;
-    if (!getStructureConfig_override(styp, g->mc, &sconf))
+    if (!getStructureConfig(styp, g->mc, &sconf))
         return;
 
     int qmax = 1000;

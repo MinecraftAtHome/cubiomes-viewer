@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "cubiomes/features/end_city.h"
+#include "cubiomes/features/fortress.h"
 #include "cubiomes/finders.h"
 
 #include <QSettings>
