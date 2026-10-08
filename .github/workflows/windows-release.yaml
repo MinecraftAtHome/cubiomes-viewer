@@ -41,7 +41,7 @@ jobs:
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
-              cygpath -u "$SOURCE_DIR" >> $canon_path
+              canon_path = cygpath -u "$SOURCE_DIR"
               echo "canonical_source_dir=${canon_path}" >> $GITHUB_ENV
               qmake-qt5 CONFIG+=release $canon_path
               make
