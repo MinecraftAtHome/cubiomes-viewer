@@ -41,21 +41,23 @@ jobs:
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
-              qmake-qt5 CONFIG+=release "$(cygpath -u "$SOURCE_DIR")"
+              cygpath -u "$SOURCE_DIR" >> $canon_path
+              echo "canonical_source_dir=${canon_path}" >> $GITHUB_ENV
+              qmake-qt5 CONFIG+=release $canon_path
               make
               
       - name: Deploy
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
               mkdir ${{env.PROG}}
-              cp ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe ${{env.PROG}}
-              windeployqt-qt5 --dir ${{env.PROG}} ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle
-              ${{env.SOURCE_DIR}}\${{env.PROG}}\${{env.PROG}}.exe --version
+              cp ${{env.canonical_source_dir}}\release\${{env.PROG}}.exe ${{env.PROG}}
+              windeployqt-qt5 --dir ${{env.PROG}} ${{env.canonical_source_dir}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle
+              ${{env.canonical_source_dir}}\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{env.PROG}}-win
-          path: ${{env.SOURCE_DIR}}\${{env.PROG}}
+          path: ${{env.canonical_source_dir}}\${{env.PROG}}
 
 
