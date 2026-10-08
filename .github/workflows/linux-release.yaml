@@ -28,7 +28,7 @@ jobs:
         with:
           submodules: recursive
       - name: Obtain necessary packages
-        run: sudo apt install -y build-essential qt5-default
+        run: sudo apt install -y build-essential qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
     
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
