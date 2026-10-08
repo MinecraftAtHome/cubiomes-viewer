@@ -40,7 +40,7 @@ jobs:
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
-              qmake CONFIG+=release ${{env.SOURCE_DIR}}
+              qmake-qt5 CONFIG+=release ${{env.SOURCE_DIR}}
               make
               
       - name: Deploy
