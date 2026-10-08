@@ -7,12 +7,16 @@ on:
     tags:
       - 'v*'
 
+  pull_request:
+    branches:
+      - 'trunk'
 env:
   PROG:         cubiomes-viewer
   SOURCE_DIR:   ${{github.workspace}}
 
 jobs:
   build:
+    name: build-macos
     runs-on: macos-latest
 
     steps:
@@ -25,8 +29,8 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion:   '==3.1.*'
-          version:      '6.7.3'
-          archives:     'x86_64 qtbase qttools'
+          version:      '6.11.2'
+          archives:     'x86_64 arm64 qtbase qttools'
           cache:        true
 
       - name: Build

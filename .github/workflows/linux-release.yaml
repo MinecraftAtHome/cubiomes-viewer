@@ -1,0 +1,44 @@
+name: Linux Release
+
+on:
+  push:
+    branches:
+      - 'trunk'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - 'trunk'
+
+defaults:
+  run:
+    shell: bash
+
+
+env:
+  PROG: cubiomes-viewer
+  SOURCE_DIR: ${{github.workspace}}
+
+
+jobs:
+  build:
+    name: linux-build
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Obtain necessary packages
+        run: sudo apt install -y build-essential qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+    
+      - name: Build
+        working-directory: ${{env.SOURCE_DIR}}
+        run: mkdir build && cd build && qmake .. && make
+      
+      - name: Save build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.PROG}}-linux
+          path: ${{env.SOURCE_DIR}}/build/cubiomes-viewer
