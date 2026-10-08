@@ -25,7 +25,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion:   '==3.1.*'
-          version:      '6.7.3'
+          version:      '5.15.2'
           archives:     'x86_64 qtbase qttools'
           cache:        true
 
