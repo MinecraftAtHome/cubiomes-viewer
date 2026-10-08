@@ -89,7 +89,7 @@ void replyFinished(QNetworkReply *reply, bool quiet)
 
     if (answer == QMessageBox::Yes)
     {
-        QString url = QString("https://github.com/Cubitect/cubiomes-viewer/releases/tag/%1").arg(newest);
+        QString url = QString("https://github.com/MinecraftAtHome/cubiomes-viewer/releases/tag/%1").arg(newest);
         QDesktopServices::openUrl(QUrl(url));
     }
 }
@@ -103,7 +103,7 @@ void searchForUpdates(bool quiet)
             manager->deleteLater();
         });
 
-    QUrl qrl("https://api.github.com/repos/Cubitect/cubiomes-viewer/releases");
+    QUrl qrl("https://api.github.com/repos/MinecraftAtHome/cubiomes-viewer/releases");
     manager->get(QNetworkRequest(qrl));
 }
 
