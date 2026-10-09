@@ -31,11 +31,11 @@ jobs:
         with:
           submodules: recursive
       - name: Obtain necessary packages
-        run: sudo apt install -y build-essential qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+        run: sudo apt install -y build-essential qtbase6-dev qtchooser qt6-qmake qtbase6-dev-tools
     
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
-        run: mkdir build && cd build && qmake .. && make
+        run: mkdir build && cd build && qmake6 .. && make
       
       - name: Save build artifact
         uses: actions/upload-artifact@v4
