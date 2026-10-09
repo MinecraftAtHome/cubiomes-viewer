@@ -39,7 +39,7 @@ jobs:
           archives: 'qtbase qttools'
           cache: true
           setup-python: false
-
+          tools: 'tools_mingw1310'
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         env:
