@@ -6,6 +6,9 @@ on:
       - 'trunk'
     tags:
       - 'v*'
+  pull_request:
+    branches:
+     - 'trunk'
 
 defaults:
   run:

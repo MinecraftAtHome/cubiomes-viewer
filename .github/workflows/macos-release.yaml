@@ -7,6 +7,9 @@ on:
     tags:
       - 'v*'
 
+  pull_request:
+    branches:
+      - 'trunk'
 env:
   PROG:         cubiomes-viewer
   SOURCE_DIR:   ${{github.workspace}}
