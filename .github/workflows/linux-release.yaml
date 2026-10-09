@@ -31,7 +31,7 @@ jobs:
         with:
           submodules: recursive
       - name: Obtain necessary packages
-        run: sudo apt install -y build-essential qtbase6-dev qtchooser qt6-qmake qtbase6-dev-tools
+        run: sudo apt install -y build-essential qt6-base-dev qtchooser qmake6 qt6-base-dev-tools
     
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}

@@ -47,7 +47,7 @@ jobs:
         run:  |
               canon_path=$(cygpath -u "$SOURCE_DIR")
               echo "canonical_source_dir=${canon_path}" >> $GITHUB_ENV
-              qmake-qt6 CONFIG+=release $canon_path
+              qmake6 CONFIG+=release $canon_path
               make
               
       - name: Deploy
@@ -55,7 +55,7 @@ jobs:
         run:  |
               mkdir ${{env.PROG}}
               cp ${{env.canonical_source_dir}}/release/${{env.PROG}}.exe ${{env.PROG}}
-              windeployqt-qt6 --dir ${{env.PROG}} ${{env.canonical_source_dir}}/release/${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle
+              windeployqt6 --dir ${{env.PROG}} ${{env.canonical_source_dir}}/release/${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle
               ${{env.canonical_source_dir}}/${{env.PROG}}/${{env.PROG}}.exe --version
 
       - name: Save build artifact
