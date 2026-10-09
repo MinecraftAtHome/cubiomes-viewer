@@ -12,7 +12,7 @@ on:
 
 defaults:
   run:
-    shell: cmd {0}
+    shell: cmd
 
 env:
   PROG:         cubiomes-viewer
@@ -56,7 +56,7 @@ jobs:
               mkdir ${{env.PROG}}
               copy ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe ${{env.PROG}}
               windeployqt6 --dir ${{env.PROG}} ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
-              ${{env.SOURCE_DIR}}\\${{env.PROG}}\${{env.PROG}}.exe --version
+              ${{env.SOURCE_DIR}}\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
         uses: actions/upload-artifact@v4
