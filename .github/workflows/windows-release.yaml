@@ -55,8 +55,8 @@ jobs:
         run:  |
               mkdir ${{env.PROG}}
               copy ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe ${{env.PROG}}
-              windeployqt6 --dir ${{env.PROG}} ${{env.canonical_source_dir}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
-              ${{env.canonical_source_dir}}\${{env.PROG}}\${{env.PROG}}.exe --version
+              windeployqt6 --dir ${{env.PROG}} ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
+              ${{env.SOURCE_DIR}}\\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
         uses: actions/upload-artifact@v4
