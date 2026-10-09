@@ -33,8 +33,12 @@ jobs:
         with:
           aqtversion:   '==3.1.*'
           version:      '6.11.2'
-          archives:     'x86_64 qtbase qttools'
-          cache:        true
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw81'
+          archives: 'x86_64 qtbase qttools'
+          cache: true
+          setup-python: false
 
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
