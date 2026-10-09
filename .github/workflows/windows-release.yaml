@@ -12,7 +12,7 @@ on:
 
 defaults:
   run:
-    shell: msys2 {0}
+    shell: cmd {0}
 
 env:
   PROG:         cubiomes-viewer
@@ -28,35 +28,31 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Install Msys2
-        uses: msys2/setup-msys2@v2
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
         with:
-          update: true
-          install: >
-            base-devel
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-ninja
-            mingw-w64-cross-mingwarm64-gcc
-            mingw-w64-x86_64-qt6-base
-            mingw-w64-x86_64-qt6-tools
+          aqtversion:   '==3.1.*'
+          version:      '6.11.2'
+          archives:     'x86_64 qtbase qttools'
+          cache:        true
 
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
+        env:
+          CMAKE_GENERATOR: MinGW Makefiles
+          CC: gcc
+          CXX: g++
         run:  |
-              canon_path=$(cygpath -u "$SOURCE_DIR")
-              echo "canonical_source_dir=${canon_path}" >> $GITHUB_ENV
-              qmake6 CONFIG+=release $canon_path
-              make
-              
+              qmake6 CONFIG+=release ${{env.SOURCE_DIR}}
+              mingw32-make
+
       - name: Deploy
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
               mkdir ${{env.PROG}}
-              cp ${{env.canonical_source_dir}}/release/${{env.PROG}}.exe ${{env.PROG}}
-              windeployqt6 --dir ${{env.PROG}} ${{env.canonical_source_dir}}/release/${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
-              ${{env.canonical_source_dir}}/${{env.PROG}}/${{env.PROG}}.exe --version
+              copy ${{env.canonical_source_dir}}\release\${{env.PROG}}.exe ${{env.PROG}}
+              windeployqt6 --dir ${{env.PROG}} ${{env.canonical_source_dir}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
+              ${{env.canonical_source_dir}}\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
         uses: actions/upload-artifact@v4
