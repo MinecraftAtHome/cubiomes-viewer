@@ -1215,7 +1215,7 @@ void MainWindow::onUpdateConfig()
         QApplication::setFont(fnorm);
 
         QWidgetList wlist = QApplication::allWidgets();
-        for (QWidget *w : qAsConst(wlist))
+        for (QWidget *w : std::as_const(wlist))
         {
             const QFont& f = w->font();
             if (f.styleHint() == QFont::Monospace || f.family() == "Monospace")
@@ -1227,7 +1227,7 @@ void MainWindow::onUpdateConfig()
         QSize iconsize = QSize((int)round(14 * g_fontscale), (int)round(14 * g_fontscale));
 
         // update cascade
-        for (QWidget *w : qAsConst(wlist))
+        for (QWidget *w : std::as_const(wlist))
         {
             if (QAbstractButton *b = qobject_cast<QAbstractButton*>(w))
                 b->setIconSize(iconsize);

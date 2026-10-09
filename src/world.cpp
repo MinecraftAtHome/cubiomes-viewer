@@ -1269,7 +1269,7 @@ void QWorld::draw(QPainter& painter, int vw, int vh, qreal focusx, qreal focusz,
 
     if (showBB && blocks2pix >= 1.0 && qsinfo && dim == 0)
     {
-        for (QuadInfo qi : qAsConst(*qsinfo))
+        for (QuadInfo qi : std::as_const(*qsinfo))
         {
             if (qi.typ == Swamp_Hut && !sshow[D_HUT])
                 continue;

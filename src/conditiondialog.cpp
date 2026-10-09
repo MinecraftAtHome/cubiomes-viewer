@@ -426,7 +426,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         ui->checkAbandoned->setCheckState(totristate(cond.varflags, Condition::VAR_ABANODONED));
         ui->checkEndShip->setCheckState(totristate(cond.varflags, Condition::VAR_ENDSHIP));
         ui->checkBasement->setCheckState(totristate(cond.varflags, Condition::VAR_BASEMENT));
-        for (VariantCheckBox *cb : qAsConst(variantboxes))
+        for (VariantCheckBox *cb : std::as_const(variantboxes))
         {
             int idx = cb->sp - g_start_pieces;
             cb->setChecked(cond.varstart & (1ULL << idx));
@@ -1150,7 +1150,7 @@ void ConditionDialog::onAccept()
     c.varflags |= tristateFlags(ui->checkEndShip, Condition::VAR_ENDSHIP);
     c.varflags |= tristateFlags(ui->checkBasement, Condition::VAR_BASEMENT);
 
-    for (VariantCheckBox *cb : qAsConst(variantboxes))
+    for (VariantCheckBox *cb : std::as_const(variantboxes))
     {
         if (!cb->isChecked())
             continue;

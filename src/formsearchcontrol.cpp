@@ -66,7 +66,7 @@ int SeedTableModel::insertSeeds(QVector<uint64_t> newseeds)
 {
     int row = seeds.size();
     beginInsertRows(QModelIndex(), row, row + newseeds.size()-1);
-    for (uint64_t seed : qAsConst(newseeds))
+    for (uint64_t seed : std::as_const(newseeds))
     {
         Seed s;
         s.seed = seed;
@@ -547,7 +547,7 @@ int FormSearchControl::pasteList(bool dummy)
     QStringList slist = clipboard->text().split('\n');
     std::vector<uint64_t> seeds;
 
-    for (QString s : qAsConst(slist))
+    for (QString s : std::as_const(slist))
     {
         s = s.trimmed();
         if (s.isEmpty())
