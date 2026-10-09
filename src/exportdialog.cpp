@@ -170,7 +170,7 @@ ExportDialog::ExportDialog(MainWindow *parent)
 ExportDialog::~ExportDialog()
 {
     cancel();
-    for (ExportWorker *worker : qAsConst(workers))
+    for (ExportWorker *worker : std::as_const(workers))
     {
         worker->wait();
         delete worker;
@@ -216,7 +216,7 @@ void ExportDialog::startWorkers()
 
 void ExportDialog::onWorkerFinished()
 {
-    for (ExportWorker *worker : qAsConst(workers))
+    for (ExportWorker *worker : std::as_const(workers))
         if (worker->isRunning())
             return;
 
@@ -227,7 +227,7 @@ void ExportDialog::onWorkerFinished()
     QZipWriter zipwriter(&buffer);
     zipwriter.setCompressionPolicy(QZipWriter::AutoCompress);
 
-    for (const QString& fnam : qAsConst(paths))
+    for (const QString& fnam : std::as_const(paths))
     {
         QFile file(fnam);
         if (file.open(QFile::ReadOnly))
@@ -340,7 +340,7 @@ void ExportDialog::on_buttonBox_clicked(QAbstractButton *button)
 
     if (b == QDialogButtonBox::Ok)
     {
-        for (ExportWorker *worker : qAsConst(workers))
+        for (ExportWorker *worker : std::as_const(workers))
             if (worker->isRunning())
                 return;
 
