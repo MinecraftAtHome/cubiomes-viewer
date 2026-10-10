@@ -575,7 +575,7 @@ void MapView::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton)
     {
-        mprev = mstart = e->pos();
+        mprev = mstart = e->position().toPoint();
         holding = true;
         prevx = focusx = getX();
         prevz = focusz = getZ();
@@ -603,7 +603,7 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
 {
     if ((e->buttons() & Qt::LeftButton) && holding)
     {
-        QPoint d = e->pos() - mprev;
+        QPoint d = e->position().toPoint() - mprev;
         qreal dt = elapsed1.nsecsElapsed() * 1e-9;
         if (dt > .005)
         {
@@ -614,7 +614,7 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
             focusz = focusz - d.y() / blocks2pix;
             elapsed1.start();
         }
-        mprev = e->pos();
+        mprev = e->position().toPoint();
         update();//repaint();
     }
 }
@@ -627,7 +627,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *e)
         if (mtime > .0)
         {
             elapsed1.start();
-            QPoint d = e->pos() - mprev;
+            QPoint d = e->position().toPoint() - mprev;
             focusx = focusx - d.x() / blocks2pix;
             focusz = focusz - d.y() / blocks2pix;
             velx = (focusx - prevx) / mtime;
@@ -643,9 +643,9 @@ void MapView::mouseReleaseEvent(QMouseEvent *e)
         if (!(e->modifiers() & Qt::ShiftModifier))
             measure = false;
         holding = false;
-        mprev = e->pos();
+        mprev = e->position().toPoint();
 
-        if (world && e->pos() == mstart)
+        if (world && e->position().toPoint() == mstart)
         {
             world->setSelectPos(mstart);
         }
