@@ -513,6 +513,12 @@ static const struct FilterList : private FilterInfo
             ""
         };
 
+        list[F_CAMP] = FilterInfo{
+            CAT_STRUCT, 0, LOC_RAD, Abandoned_Camp, 1, BR_CLUST, MC_26_3, MC_NEWEST, 0, 0, disp++,
+              "camp",
+              QT_TRANSLATE_NOOP("Filter", "Abandoned Camps"), ""
+        };
+
         list[F_PORTAL] = FilterInfo{
             CAT_STRUCT, 0, LOC_RAD, Ruined_Portal, 1, BR_CLUST, MC_1_16_1, MC_NEWEST, 0, 0, disp++,
             "portal",
