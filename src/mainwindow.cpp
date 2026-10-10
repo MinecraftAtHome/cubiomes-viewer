@@ -128,7 +128,7 @@ MainWindow::MainWindow(QString sessionpath, QString resultspath, QWidget *parent
     for (int i = 0; i <= 9; i++)
     {
         QAction *act = new QAction(this);
-        act->setShortcut(QKeySequence(Qt::ALT+Qt::Key_0+i));
+        act->setShortcut(QKeySequence((Qt::ALT|Qt::Key_0)+i));
         act->setEnabled(true);
         connect(act, &QAction::triggered, [=](){
             this->onActionBiomeLayerSelect(lopt.mode, i);
@@ -324,7 +324,7 @@ bool MainWindow::loadTranslation(QString lang)
         return false;
     QLocale::setDefault(QLocale(lang));
     QString qt_locale = "qtbase_" + lang;
-    QString qt_trpath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QString qt_trpath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     if (qt_translator.load(qt_locale, qt_trpath))
         qApp->installTranslator(&qt_translator);
     qApp->installTranslator(&rc_translator);
