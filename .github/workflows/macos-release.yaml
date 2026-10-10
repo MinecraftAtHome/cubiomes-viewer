@@ -42,7 +42,7 @@ jobs:
       - name: Deploy
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
-              macdeployqt ${{env.PROG}}.app -dmg -no-plugins
+              macdeployqt ${{env.PROG}}.app -dmg
 
       - name: Test
         working-directory: ${{env.SOURCE_DIR}}
