@@ -484,7 +484,7 @@ void FormSearchControl::on_results_customContextMenuRequested(const QPoint &pos)
 
     QAction *actcopylist = menu->addAction(QIcon::fromTheme("edit-copy"),
         tr("Copy seed list"), this,
-        &FormSearchControl::copyResults, QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_C));
+        &FormSearchControl::copyResults, QKeySequence(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C)));
     actcopylist->setEnabled(ui->results->model()->rowCount() > 0);
 
     int n = pasteList(true);

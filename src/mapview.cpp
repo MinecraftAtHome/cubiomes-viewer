@@ -421,7 +421,7 @@ void MapView::showContextMenu(const QPoint &pos)
             wmax = w;
     }
 
-    menu->addAction(tr("Go to coordinates..."), this, &MapView::onGoto, QKeySequence(Qt::CTRL + Qt::Key_G));
+    menu->addAction(tr("Go to coordinates..."), this, &MapView::onGoto, QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_G)));
     if (world)
     {
         QString txt = tr("Copy seed:");

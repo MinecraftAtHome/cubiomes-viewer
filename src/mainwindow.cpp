@@ -128,7 +128,7 @@ MainWindow::MainWindow(QString sessionpath, QString resultspath, QWidget *parent
     for (int i = 0; i <= 9; i++)
     {
         QAction *act = new QAction(this);
-        act->setShortcut(QKeySequence((Qt::ALT|Qt::Key_0)+i));
+        act->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, static_cast<Qt::Key>(Qt::Key_0+i))));
         act->setEnabled(true);
         connect(act, &QAction::triggered, [=](){
             this->onActionBiomeLayerSelect(lopt.mode, i);
