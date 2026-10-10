@@ -260,11 +260,11 @@ void RangeSlider::mousePressEvent(QMouseEvent *e)
         QStyle::SubControl hit;
         holding = 0;
         opt.sliderValue = opt.sliderPosition = pos0;
-        hit = style()->hitTestComplexControl(QStyle::CC_Slider, &opt, e->pos(), this);
+        hit = style()->hitTestComplexControl(QStyle::CC_Slider, &opt, e->position().toPoint(), this);
         if (hit == QStyle::SC_SliderHandle)
             holding = -1;
         opt.sliderValue = opt.sliderPosition = pos1;
-        hit = style()->hitTestComplexControl(QStyle::CC_Slider, &opt, e->pos(), this);
+        hit = style()->hitTestComplexControl(QStyle::CC_Slider, &opt, e->position().toPoint(), this);
         if (hit == QStyle::SC_SliderHandle)
             holding = +1;
     }

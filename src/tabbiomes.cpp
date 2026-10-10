@@ -256,7 +256,7 @@ bool BiomeHeader::event(QEvent *e)
     {
     case QEvent::HoverEnter:
     case QEvent::HoverMove:
-        hover = logicalIndexAt(((QHoverEvent*)e)->pos());
+        hover = logicalIndexAt(((QHoverEvent*)e)->position().toPoint());
         break;
     case QEvent::Leave:
     case QEvent::HoverLeave:
