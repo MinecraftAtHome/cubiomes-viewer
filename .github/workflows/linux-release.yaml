@@ -30,7 +30,7 @@ jobs:
         with:
           submodules: recursive
       - name: Obtain necessary packages
-        run: sudo apt install -y build-essential
+        run: sudo apt install -y build-essential libicu78
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
