@@ -36,7 +36,7 @@ ConfigDialog::ConfigDialog(QWidget *parent, Config *config)
         QString code = QFileInfo(fnam).baseName();
         QLocale locale(code);
         QString text = QLocale::languageToString(locale.language());
-        text += " (" + QLocale::countryToString(locale.country()) + ")";
+        text += " (" + QLocale::territoryToString(locale.territory()) + ")";
         ui->comboLang->addItem(text, code);
     }
 
