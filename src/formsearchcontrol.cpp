@@ -473,24 +473,24 @@ void FormSearchControl::on_results_customContextMenuRequested(const QPoint &pos)
     // but will not function - see keyReleaseEvent() for shortcut implementation
 
     QAction *actremove = menu->addAction(QIcon::fromTheme("list-remove"),
-        tr("Remove selected seed"), this,
-        &FormSearchControl::removeCurrent, QKeySequence::Delete);
+        tr("Remove selected seed"), QKeySequence::Delete, this,
+        &FormSearchControl::removeCurrent);
     actremove->setEnabled(ui->results->selectionModel()->hasSelection());
 
     QAction *actcopyseed = menu->addAction(QIcon::fromTheme("edit-copy"),
-        tr("Copy selected seed"), this,
-        &FormSearchControl::copySeed, QKeySequence::Copy);
+        tr("Copy selected seed"), QKeySequence::Copy, this,
+        &FormSearchControl::copySeed);
     actcopyseed->setEnabled(ui->results->selectionModel()->hasSelection());
 
     QAction *actcopylist = menu->addAction(QIcon::fromTheme("edit-copy"),
-        tr("Copy seed list"), this,
-        &FormSearchControl::copyResults, QKeySequence(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C)));
+        tr("Copy seed list"), QKeySequence(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C)), this,
+        &FormSearchControl::copyResults);
     actcopylist->setEnabled(ui->results->model()->rowCount() > 0);
 
     int n = pasteList(true);
     QAction *actpaste = menu->addAction(QIcon::fromTheme("edit-paste"),
-        tr("Paste %n seed(s) from clipboard", "", n), this,
-        &FormSearchControl::pasteResults, QKeySequence::Paste);
+        tr("Paste %n seed(s) from clipboard", "", n), QKeySequence::Paste, this,
+        &FormSearchControl::pasteResults);
     actpaste->setEnabled(n > 0);
     menu->popup(ui->results->mapToGlobal(pos));
 }

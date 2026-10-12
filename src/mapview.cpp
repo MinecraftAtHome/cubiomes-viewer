@@ -421,14 +421,14 @@ void MapView::showContextMenu(const QPoint &pos)
             wmax = w;
     }
 
-    menu->addAction(tr("Go to coordinates..."), this, &MapView::onGoto, QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_G)));
+    menu->addAction(tr("Go to coordinates..."), QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_G)), this, &MapView::onGoto);
     if (world)
     {
         QString txt = tr("Copy seed:");
         while (txtWidth(menu->fontMetrics(), txt + " ") < wmax)
             txt += " ";
         txt += QString::asprintf("%" PRId64, (int64_t)world->wi.seed);
-        menu->addAction(txt, this, &MapView::copySeed, QKeySequence::Copy);
+        menu->addAction(txt, QKeySequence::Copy, this, &MapView::copySeed);
     }
     for (auto& it : cpy_dat)
     {
