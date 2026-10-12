@@ -41,7 +41,7 @@ jobs:
           target: 'desktop'
           archives: 'qtbase qttools'
           cache: true
-          setup-python: false
+          setup-python: true
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
         run: mkdir build && cd build && qmake6 .. && make
