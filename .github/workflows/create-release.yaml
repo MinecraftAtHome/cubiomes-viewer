@@ -15,8 +15,9 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    run:
-      shell: cmd
+    defaults:
+      run:
+        shell: cmd
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
