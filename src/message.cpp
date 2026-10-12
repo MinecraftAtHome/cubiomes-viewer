@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include <QTextStream>
-
+#include <QStyle>
 
 static
 int term_prompt(const QString& title, const QString& text, QMessageBox::StandardButtons buttons)
@@ -62,7 +62,7 @@ int term_prompt(const QString& title, const QString& text, QMessageBox::Standard
 
 static
 int message(
-    QWidget *parent, QMessageBox::Icon icon, const QString& title, const QString& text,
+    QWidget *parent, QStyle::StandardPixmap icon, const QString& title, const QString& text,
     const QString& prompt, QMessageBox::StandardButtons buttons)
 {
     QString s = text;
@@ -74,7 +74,7 @@ int message(
     // emulate the behaviour of QMessageBox::warning(...), but raise as active window
     QMessageBox *w = new QMessageBox(parent);
     w->setWindowTitle(title);
-    w->setIconPixmap(QMessageBox::standardIcon(icon)); // setIcon() plays a sound on windows
+    w->setIconPixmap(w->style()->standardPixmap(icon)); // setIcon() plays a sound on windows
     parent->setWindowState(Qt::WindowActive);
     //w.setWindowState(Qt::WindowActive);
 #if WASM || 1
@@ -95,20 +95,20 @@ int message(
 
 int warn(QWidget *parent, const QString& title, const QString& text, const QString& prompt, QMessageBox::StandardButtons buttons)
 {
-    return message(parent, QMessageBox::Warning, title, text, prompt, buttons);
+    return message(parent, QStyle::SP_MessageBoxWarning, title, text, prompt, buttons);
 }
 
 void warn(QWidget *parent, const QString& title, const QString& text)
 {
-    message(parent, QMessageBox::Warning, title, text, "", QMessageBox::Ok);
+    message(parent, QStyle::SP_MessageBoxWarning, title, text, "", QMessageBox::Ok);
 }
 
 void warn(QWidget *parent, const QString& text)
 {
-    message(parent, QMessageBox::Warning, QApplication::tr("Warning"), text, "", QMessageBox::Ok);
+    message(parent, QStyle::SP_MessageBoxWarning, QApplication::tr("Warning"), text, "", QMessageBox::Ok);
 }
 
 void info(QWidget *parent, const QString& text)
 {
-    message(parent, QMessageBox::Information, QApplication::tr("Information"), text, "", QMessageBox::Ok);
+    message(parent, QStyle::SP_MessageBoxInformation, QApplication::tr("Information"), text, "", QMessageBox::Ok);
 }
