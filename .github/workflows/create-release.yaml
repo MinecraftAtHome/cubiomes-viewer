@@ -130,6 +130,7 @@ jobs:
       - name: Download all artifacts from previous jobs 
         uses: actions/download-artifact@v8
         with:
+          skip-decompress: true
           path: release-artifacts
           merge-multiple: true
       - name: Create GitHub Release
