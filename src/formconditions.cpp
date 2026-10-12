@@ -295,42 +295,45 @@ void FormConditions::on_listConditions_customContextMenuRequested(const QPoint &
 
     if (parent)
     {
+
+        // icon, text, context, functor, shortcut
+        // icon, text, shortcut, context, functor
         QAction *actadd = menu->addAction(QIcon::fromTheme("list-add"),
-            tr("Add new condition"), this,
-            &FormConditions::conditionsAdd, QKeySequence::New);
+            tr("Add new condition"), QKeySequence::New, this,
+            &FormConditions::conditionsAdd);
         actadd->setEnabled(true);
 
         QAction *actedit = menu->addAction(QIcon(),
-            tr("Edit condition"), this,
-            &FormConditions::conditionsEdit, QKeySequence::Open);
+            tr("Edit condition"), QKeySequence::Open, this,
+            &FormConditions::conditionsEdit);
         actedit->setEnabled(n == 1);
 
         QAction *actcut = menu->addAction(QIcon::fromTheme("edit-cut"),
-            tr("Cut %n condition(s)", "", n), this,
-            &FormConditions::conditionsCut, QKeySequence::Cut);
+            tr("Cut %n condition(s)", "", n), QKeySequence::Cut, this,
+            &FormConditions::conditionsCut);
         actcut->setEnabled(n > 0);
 
         QAction *actcopy = menu->addAction(QIcon::fromTheme("edit-copy"),
-            tr("Copy %n condition(s)", "", n), this,
-            &FormConditions::conditionsCopy, QKeySequence::Copy);
+            tr("Copy %n condition(s)", "", n), QKeySequence::Copy, this,
+            &FormConditions::conditionsCopy);
         actcopy->setEnabled(n > 0);
 
         int pn = conditionsPaste(true);
         QAction *actpaste = menu->addAction(QIcon::fromTheme("edit-paste"),
-            tr("Paste %n condition(s)", "", pn), this,
-            &FormConditions::conditionsPaste, QKeySequence::Paste);
+            tr("Paste %n condition(s)", "", pn), QKeySequence::Paste, this,
+            &FormConditions::conditionsPaste);
         actpaste->setEnabled(pn > 0);
 
         QAction *actdel = menu->addAction(QIcon::fromTheme("edit-delete"),
-            tr("Remove %n condition(s)", "", n), this,
-            &FormConditions::conditionsDelete, QKeySequence::Delete);
+            tr("Remove %n condition(s)", "", n), QKeySequence::Delete, this,
+            &FormConditions::conditionsDelete);
         actdel->setEnabled(n > 0);
     }
     else
     {
         QAction *actcopy = menu->addAction(QIcon::fromTheme("edit-copy"),
-            tr("Copy %n condition(s)", "", n), this,
-            &FormConditions::conditionsCopy, QKeySequence::Copy);
+            tr("Copy %n condition(s)", "", n), QKeySequence::Copy, this,
+            &FormConditions::conditionsCopy);
         actcopy->setEnabled(n > 0);
     }
 
