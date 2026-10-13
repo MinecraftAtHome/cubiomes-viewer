@@ -21,7 +21,7 @@ jobs:
         shell: cmd
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Install Qt
@@ -55,7 +55,7 @@ jobs:
               ${{env.SOURCE_DIR}}\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.PROG}}-win
           path: ${{env.SOURCE_DIR}}\${{env.PROG}}
@@ -66,7 +66,7 @@ jobs:
 
       steps:
         - name: Checkout repo
-          uses: actions/checkout@v4
+          uses: actions/checkout@v7
           with:
             submodules: recursive
 
@@ -96,7 +96,7 @@ jobs:
                 otool -L ${{env.PROG}}.app/Contents/MacOS/${{env.PROG}}
 
         - name: Save build artifact
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@v7
           with:
             name: ${{env.PROG}}-macos
             path: ${{env.SOURCE_DIR}}/${{env.PROG}}.dmg
@@ -106,7 +106,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Obtain necessary packages
@@ -117,13 +117,13 @@ jobs:
         run: mkdir build && cd build && qmake6 .. && make
       
       - name: Save build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.PROG}}-linux
           path: ${{env.SOURCE_DIR}}/build/cubiomes-viewer
 
   create_release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: [build-windows, build-linux, build-macos]
     steps:
       - uses: actions/checkout@v7
