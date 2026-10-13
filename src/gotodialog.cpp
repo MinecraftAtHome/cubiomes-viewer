@@ -68,7 +68,7 @@ void GotoDialog::on_lineScale_textChanged(const QString &text)
 
 void GotoDialog::keyPressEvent(QKeyEvent *event)
 {
-    static QRegularExpression coord_delim = QRegularExpression("[, ]+");
+    static QRegularExpression coord_delim = QRegularExpression("[, \t]+");
 
     if (event->matches(QKeySequence::Paste))
     {
