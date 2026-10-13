@@ -2,7 +2,7 @@
 #include "ui_gotodialog.h"
 
 #include "mapview.h"
-
+#include "TrimmedDoubleValidator.h"
 #include <QClipboard>
 #include <QDoubleValidator>
 #include <QKeyEvent>
@@ -18,9 +18,9 @@ GotoDialog::GotoDialog(MapView *map, qreal x, qreal z, qreal scale)
 
     scalemin = 1.0 / 4096;
     scalemax = 65536;
-    ui->lineX->setValidator(new QDoubleValidator(-3e7, 3e7, 1, ui->lineX));
-    ui->lineZ->setValidator(new QDoubleValidator(-3e7, 3e7, 1, ui->lineZ));
-    ui->lineScale->setValidator(new QDoubleValidator(scalemin, scalemax, 16, ui->lineScale));
+    ui->lineX->setValidator(new TrimmedDoubleValidator(-3e7, 3e7, 1, ui->lineX));
+    ui->lineZ->setValidator(new TrimmedDoubleValidator(-3e7, 3e7, 1, ui->lineZ));
+    ui->lineScale->setValidator(new TrimmedDoubleValidator(scalemin, scalemax, 16, ui->lineScale));
 
     ui->lineX->setText(QString::asprintf("%.1f", x));
     ui->lineZ->setText(QString::asprintf("%.1f", z));
@@ -68,7 +68,7 @@ void GotoDialog::on_lineScale_textChanged(const QString &text)
 
 void GotoDialog::keyPressEvent(QKeyEvent *event)
 {
-    static QRegularExpression coord_delim = QRegularExpression("[, ]+");
+    static QRegularExpression coord_delim = QRegularExpression("[, \t]+");
 
     if (event->matches(QKeySequence::Paste))
     {
