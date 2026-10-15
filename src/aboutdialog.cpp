@@ -1,7 +1,7 @@
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 
-#include "lua.hpp"
+#include "lua/src/lua.hpp"
 
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
