@@ -184,7 +184,7 @@ HEADERS += \
         src/formsearchcontrol.h \
         src/gotodialog.h \
         src/headless.h \
-	src/lua.hpp \
+        src/lua.hpp \
         src/maptoolsdialog.h \
         src/message.h \
         src/presetdialog.h \
