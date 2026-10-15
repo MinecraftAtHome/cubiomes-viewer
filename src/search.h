@@ -3,7 +3,7 @@
 
 #include "cubiomes/finders.h"
 
-#include "lua/src/lua.hpp"
+#include "lua.hpp"
 
 #include <QVector>
 #include <QString>
