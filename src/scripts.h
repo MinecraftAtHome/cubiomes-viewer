@@ -12,7 +12,7 @@
 
 #include "cubiomes/finders.h"
 
-#include "lua/src/lua.hpp"
+#include "lua.hpp"
 
 struct SearchThreadEnv;
 struct Condition;
