@@ -387,25 +387,25 @@ int _testTreeAt(
             if (c.rmax > 0)
             {
                 rmax = c.rmax - 1;
-                x1 = at.x - rmax;
-                z1 = at.z - rmax;
-                x2 = at.x + rmax;
-                z2 = at.z + rmax;
+                x1 = -rmax;
+                z1 = -rmax;
+                x2 = rmax;
+                z2 = rmax;
                 rmax = rmax * rmax + 1;
             }
             else
             {
                 rmax = 0;
-                x1 = c.x1 + at.x;
-                z1 = c.z1 + at.z;
-                x2 = c.x2 + at.x;
-                z2 = c.z2 + at.z;
+                x1 = c.x1;
+                z1 = c.z1;
+                x2 = c.x2;
+                z2 = c.z2;
             }
 
-            rx1 = floordiv(x1, step);
-            rz1 = floordiv(z1, step);
-            rx2 = floordiv(x2, step);
-            rz2 = floordiv(z2, step);
+            rx1 = x1;
+            rz1 = z1;
+            rx2 = x2;
+            rz2 = z2;
 
             int rx = (rx1 + rx2) >> 1;
             int rz = (rz1 + rz2) >> 1;
@@ -419,8 +419,8 @@ int _testTreeAt(
                     break;
                 if (inx && inz)
                 {
-                    pos.x = rx * step;
-                    pos.z = rz * step;
+                    pos.x = rx * step + at.x;
+                    pos.z = rz * step + at.z;
 
                     bool inr = true;
                     if (rmax)
