@@ -71,7 +71,7 @@ QMAKE_PRE_LINK += cmake -S $$CUPATH -B lib_build -DCMAKE_BUILD_TYPE=Release && c
 QMAKE_CLEAN         += $$CUPATH/*.o $$CUPATH/build/build/libcubiomes.a
 LIBS                += -L$$OUT_PWD/lib_build -lcubiomes_static -lm
 
-LUAPATH = $$PWD/lua/src
+LUAPATH = $$PWD/lua
 
 TARGET = cubiomes-viewer
 
@@ -167,7 +167,6 @@ HEADERS += \
         $$LUAPATH/ltable.h \
         $$LUAPATH/ltm.h \
         $$LUAPATH/lua.h \
-        $$LUAPATH/lua.hpp \
         $$LUAPATH/luaconf.h \
         $$LUAPATH/lualib.h \
         $$LUAPATH/lundump.h \
@@ -185,6 +184,7 @@ HEADERS += \
         src/formsearchcontrol.h \
         src/gotodialog.h \
         src/headless.h \
+        src/lua.hpp \
         src/maptoolsdialog.h \
         src/message.h \
         src/presetdialog.h \
