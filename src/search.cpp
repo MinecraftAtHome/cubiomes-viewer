@@ -168,6 +168,7 @@ bool Condition::versionUpgrade()
     }
     if (version < VER_5_2_0) {
       step_size = (uint32_t)step;
+      step_skip = 0;
     }
     version = VER_CURRENT;
     return true;
@@ -409,8 +410,8 @@ int _testTreeAt(
             rx2 = x2;
             rz2 = z2;
 
-            int rx = (rx1 + rx2) >> 1;
-            int rz = (rz1 + rz2) >> 1;
+            int rx = ((rx1 + rx2) >> 1) + c.step_skip;
+            int rz = ((rz1 + rz2) >> 1) + c.step_skip;
             int i = 0, dl = 1;
             int dx = 1, dz = 0;
             while (true)

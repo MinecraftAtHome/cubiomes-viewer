@@ -642,6 +642,7 @@ struct /*__attribute__((packed))*/ Condition
     float       converage;
     float       confidence;
     uint32_t    step_size;
+    uint32_t    step_skip;
 
     // generated members - initialized when the search is started
     uint8_t     generated_start[0]; // address dummy
@@ -660,7 +661,7 @@ struct /*__attribute__((packed))*/ Condition
 };
 
 static_assert(
-    offsetof(Condition, generated_start) == 324,
+    offsetof(Condition, generated_start) == 328,
     "Layout of Condition has changed!"
 );
 
