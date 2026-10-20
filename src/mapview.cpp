@@ -604,16 +604,10 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
     if ((e->buttons() & Qt::LeftButton) && holding)
     {
         QPoint d = e->position().toPoint() - mprev;
-        qreal dt = elapsed1.nsecsElapsed() * 1e-9;
         focusx = focusx - d.x() / blocks2pix;
         focusz = focusz - d.y() / blocks2pix;
-        if (dt > .005)
-        {
-            mtime = dt;
-            prevx = focusx;
-            prevz = focusz;
-            elapsed1.start();
-        }
+        prevx = focusx;
+        prevz = focusz;
         mprev = e->position().toPoint();
         update();//repaint();
     }
