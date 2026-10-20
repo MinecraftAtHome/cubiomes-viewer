@@ -166,7 +166,9 @@ bool Condition::versionUpgrade()
             z2 = (z2+1) * mult - 1;
         }
     }
-
+    if (version < VER_5_2_0) {
+      step_size = (uint32_t)step;
+    }
     version = VER_CURRENT;
     return true;
 }
@@ -382,7 +384,7 @@ int _testTreeAt(
 
         st = COND_FAILED;
         {   // run a spiral iterator over the rectangle
-            int step = c.step ? c.step : 512;
+            int step = c.step_size ? c.step_size : 512;
             int rmax, x1, z1, x2, z2;
             if (c.rmax > 0)
             {

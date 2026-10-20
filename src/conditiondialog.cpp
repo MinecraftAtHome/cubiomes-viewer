@@ -101,7 +101,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
     ui->lineSquare->setValidator(uintval);
     ui->lineRadius->setValidator(uintval);
 
-    ui->lineSpiralStep->setValidator(new QIntValidator(1, 0xffff, this));
+    ui->lineSpiralStep->setValidator(new QIntValidator(1, INT_MAX, this));
 
     ui->lineBiomeSize->setValidator(new QIntValidator(1, INT_MAX, this));
     ui->lineTolerance->setValidator(new QIntValidator(0, 255, this));
@@ -1138,7 +1138,7 @@ void ConditionDialog::onAccept()
     }
     if (ui->stackedWidget->currentWidget() == ui->pageSpiral)
     {
-        c.step = ui->lineSpiralStep->text().toUShort();
+        c.step = ui->lineSpiralStep->text().toUInt();
     }
 
     c.varflags = c.varstart = 0;
