@@ -394,7 +394,7 @@ int _testTreeAt(
                 z1 = -rmax;
                 x2 = rmax;
                 z2 = rmax;
-                rmax = rad_max * rad_max + 1;
+                rmax = rmax * rmax + 1;
             }
             else
             {
