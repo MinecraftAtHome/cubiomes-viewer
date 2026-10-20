@@ -102,6 +102,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
     ui->lineRadius->setValidator(uintval);
 
     ui->lineSpiralStep->setValidator(new QIntValidator(1, INT_MAX, this));
+    ui->lineSpiralSkip->setValidator(new QIntValidator(0, INT_MAX, this));
 
     ui->lineBiomeSize->setValidator(new QIntValidator(1, INT_MAX, this));
     ui->lineTolerance->setValidator(new QIntValidator(0, 255, this));
@@ -337,6 +338,10 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         {
             ui->lineSpiralStep->setText(QString::number(cond.step_size));
             ui->comboScale->setCurrentIndex(ui->comboScale->findData(QVariant::fromValue(cond.step_size)));
+        }
+
+        if (cond.step_skip) {
+            ui->lineSpiralSkip->setText(QString::number(cond.step_skip));
         }
 
         ui->comboMatchBiome->insertItem(0, getBiomeDisplay(wi.mc, cond.biomeId), QVariant::fromValue(cond.biomeId));
@@ -1139,6 +1144,7 @@ void ConditionDialog::onAccept()
     if (ui->stackedWidget->currentWidget() == ui->pageSpiral)
     {
         c.step_size = ui->lineSpiralStep->text().toUInt();
+        c.step_skip = ui->lineSpiralSkip->text().toUInt();
     }
 
     c.varflags = c.varstart = 0;

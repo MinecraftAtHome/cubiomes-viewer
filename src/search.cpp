@@ -168,6 +168,7 @@ bool Condition::versionUpgrade()
     }
     if (version < VER_5_2_0) {
       step_size = (uint32_t)step;
+      step_skip = 0;
     }
     version = VER_CURRENT;
     return true;
@@ -389,77 +390,80 @@ int _testTreeAt(
             if (c.rmax > 0)
             {
                 rmax = c.rmax - 1;
-                x1 = -rmax;
-                z1 = -rmax;
-                x2 = rmax;
-                z2 = rmax;
+                x1 = at.x - rmax;
+                z1 = at.z - rmax;
+                x2 = at.x + rmax;
+                z2 = at.z + rmax;
                 rmax = rmax * rmax + 1;
             }
             else
             {
                 rmax = 0;
-                x1 = c.x1;
-                z1 = c.z1;
-                x2 = c.x2;
-                z2 = c.z2;
+                x1 = c.x1 + at.x;
+                z1 = c.z1 + at.z;
+                x2 = c.x2 + at.x;
+                z2 = c.z2 + at.z;
             }
 
             rx1 = x1;
             rz1 = z1;
             rx2 = x2;
             rz2 = z2;
-
-            int rx = (rx1 + rx2) >> 1;
-            int rz = (rz1 + rz2) >> 1;
+            int rx = ((rx1 + rx2) >> 1);
+            int rz = ((rz1 + rz2) >> 1);
             int i = 0, dl = 1;
-            int dx = 1, dz = 0;
+            int dx = step, dz = 0;
+            uint32_t step_iter = 0;
             while (true)
             {
                 bool inx = (rx >= rx1 && rx <= rx2);
                 bool inz = (rz >= rz1 && rz <= rz2);
-                if (!inx && !inz)
+                if(step_iter >= c.step_skip) {
+                  if (!inx && !inz) {
                     break;
-                if (inx && inz)
-                {
-                    pos.x = rx * step + at.x;
-                    pos.z = rz * step + at.z;
+                  }
+                  if (inx && inz)
+                  {
+                      pos.x = rx;
+                      pos.z = rz;
 
-                    bool inr = true;
-                    if (rmax)
-                    {
-                        int dx = pos.x - at.x;
-                        int dz = pos.z - at.z;
-                        int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
-                        inr = (rsq < rmax);
-                    }
-                    else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
-                    {
-                        inr = false;
-                    }
+                      bool inr = true;
+                      if (rmax)
+                      {
+                          int dx = pos.x;
+                          int dz = pos.z;
+                          int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
+                          inr = (rsq < rmax);
+                      }
+                      else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
+                      {
+                          inr = false;
+                      }
 
-                    if (inr)
-                    {
-                        // children are combined via AND at the current position
-                        int sta = COND_OK;
-                        for (int b : branches)
-                        {
-                            int stb = _testTreeAt(pos, env, path, b);
-                            if (*env->stop)
-                                return COND_FAILED;
-                            if (stb < sta)
-                                sta = stb;
-                            if (sta == COND_FAILED)
-                                break;
-                        }
-                        if (sta == COND_MAYBE_POS_VALID )
-                            sta = COND_MAYBE_POS_INVAL; // position moves => invalidate
-                        if (sta > st)
-                            st = sta;
-                        if (path && st >= COND_MAYBE_POS_VALID)
-                            path[c.save] = pos;
-                        if (st == COND_OK)
-                            return COND_OK;
-                    }
+                      if (inr)
+                      {
+                          // children are combined via AND at the current position
+                          int sta = COND_OK;
+                          for (int b : branches)
+                          {
+                              int stb = _testTreeAt(pos, env, path, b);
+                              if (*env->stop)
+                                  return COND_FAILED;
+                              if (stb < sta)
+                                  sta = stb;
+                              if (sta == COND_FAILED)
+                                  break;
+                          }
+                          if (sta == COND_MAYBE_POS_VALID )
+                              sta = COND_MAYBE_POS_INVAL; // position moves => invalidate
+                          if (sta > st)
+                              st = sta;
+                          if (path && st >= COND_MAYBE_POS_VALID)
+                              path[c.save] = pos;
+                          if (st == COND_OK)
+                              return COND_OK;
+                      }
+                  }
                 }
                 rx += dx;
                 rz += dz;
@@ -472,6 +476,7 @@ int _testTreeAt(
                     if (dz == 0)
                         dl++;
                 }
+                step_iter++;
             }
         }
         return st;
