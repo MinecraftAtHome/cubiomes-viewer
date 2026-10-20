@@ -424,8 +424,8 @@ int _testTreeAt(
                   }
                   if (inx && inz)
                   {
-                      pos.x = rx + at.x;
-                      pos.z = rz + at.z;
+                      pos.x = rx;
+                      pos.z = rz;
 
                       bool inr = true;
                       if (rmax)
