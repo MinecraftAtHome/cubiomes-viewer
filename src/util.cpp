@@ -170,11 +170,7 @@ QString getBiomeDisplay(int mc, int id)
 
 int txtWidth(const QFontMetrics& fm, const QString& s)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    return fm.width(s);
-#else
     return fm.horizontalAdvance(s);
-#endif
 }
 int txtWidth(const QFontMetrics& fm) { return txtWidth(fm, "#"); }
 int txtWidth(const QFont& f, const QString& s) { return txtWidth(QFontMetrics(f), s); }

@@ -44,11 +44,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
 
     QString mcs = tr("MC %1", "Minecraft version").arg(mc2str(wi.mc));
     ui->labelMC->setText(mcs);
-#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
-    ui->textEditLua->setTabStopWidth(txtWidth(ui->textEditLua->font(), "    "));
-#else
     ui->textEditLua->setTabStopDistance(QFontMetricsF(ui->textEditLua->font()).horizontalAdvance("    "));
-#endif
     ui->lineSummary->setMinimumWidth(
                 ui->lineSummary->minimumSizeHint().width() +
                 txtWidth(ui->lineSummary->font()) * 26
