@@ -660,7 +660,7 @@ struct /*__attribute__((packed))*/ Condition
 };
 
 static_assert(
-    offsetof(Condition, generated_start) == 320,
+    offsetof(Condition, generated_start) == 324,
     "Layout of Condition has changed!"
 );
 

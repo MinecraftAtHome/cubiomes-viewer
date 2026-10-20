@@ -58,9 +58,9 @@ QString Condition::summary(bool aligntab) const
             else
                 txts += ": " + QApplication::translate("Filter", "[script missing]");
         }
-        else if (step)
+        else if (step_size)
         {
-            txts += QString(" 1:%1").arg(step);
+            txts += QString(" 1:%1").arg(step_size);
         }
     }
 
