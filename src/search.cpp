@@ -390,29 +390,29 @@ int _testTreeAt(
             if (c.rmax > 0)
             {
                 rmax = c.rmax - 1;
-                x1 = -rmax;
-                z1 = -rmax;
-                x2 = rmax;
-                z2 = rmax;
+                x1 = at.x - rmax;
+                z1 = at.z - rmax;
+                x2 = at.x + rmax;
+                z2 = at.z + rmax;
                 rmax = rmax * rmax + 1;
             }
             else
             {
                 rmax = 0;
-                x1 = c.x1;
-                z1 = c.z1;
-                x2 = c.x2;
-                z2 = c.z2;
+                x1 = c.x1 + at.x;
+                z1 = c.z1 + at.z;
+                x2 = c.x2 + at.x;
+                z2 = c.z2 + at.z;
             }
 
-            rx1 = floordiv(x1, step);
-            rz1 = floordiv(z1, step);
-            rx2 = floordiv(x2, step);
-            rz2 = floordiv(z2, step); 
+            rx1 = x1;
+            rz1 = z1;
+            rx2 = x2;
+            rz2 = z2;
             int rx = ((rx1 + rx2) >> 1);
             int rz = ((rz1 + rz2) >> 1);
             int i = 0, dl = 1;
-            int dx = 1, dz = 0;
+            int dx = step, dz = 0;
             uint32_t step_iter = 0;
             while (true)
             {
@@ -424,8 +424,8 @@ int _testTreeAt(
                   }
                   if (inx && inz)
                   {
-                      pos.x = rx * step + at.x;
-                      pos.z = rz * step + at.z;
+                      pos.x = rx + at.x;
+                      pos.z = rz + at.z;
 
                       bool inr = true;
                       if (rmax)
@@ -1517,7 +1517,7 @@ L_qm_any:
             else if (j >= cond->count)
             {
                 cent->x = xt / j;
-                cent->z = zt / j;
+                cent->z = zt / j;:160
                 if (imax) *imax = 1;
                 return COND_OK;
             }
@@ -1943,7 +1943,7 @@ L_qm_any:
         // (except voronoi uses the full 64-bits)
         if (env->searchpass != PASS_FULL_64 && (finfo.dep64 || s == 0))
             return COND_MAYBE_POS_VALID;
-        else
+        else:160
         {
             int w = rx2 - rx1 + 1;
             int h = rz2 - rz1 + 1;
