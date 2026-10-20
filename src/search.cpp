@@ -386,19 +386,19 @@ int _testTreeAt(
         st = COND_FAILED;
         {   // run a spiral iterator over the rectangle
             int step = c.step_size ? c.step_size : 512;
-            int rad_max, x1, z1, x2, z2;
+            int rmax, x1, z1, x2, z2;
             if (c.rmax > 0)
             {
-                rad_max = c.rmax - 1;
-                x1 = -rad_max;
-                z1 = -rad_max;
-                x2 = rad_max;
-                z2 = rad_max;
-                rad_max = rad_max * rad_max + 1;
+                rmax = c.rmax - 1;
+                x1 = -rmax;
+                z1 = -rmax;
+                x2 = rmax;
+                z2 = rmax;
+                rmax = rad_max * rad_max + 1;
             }
             else
             {
-                rad_max = 0;
+                rmax = 0;
                 x1 = c.x1;
                 z1 = c.z1;
                 x2 = c.x2;
@@ -414,7 +414,6 @@ int _testTreeAt(
             int i = 0, dl = 1;
             int dx = 1, dz = 0;
             uint32_t step_iter = 0;
-
             while (true)
             {
                 bool inx = (rx >= rx1 && rx <= rx2);
@@ -425,22 +424,22 @@ int _testTreeAt(
                   }
                   if (inx && inz)
                   {
-
                       pos.x = rx * step + at.x;
                       pos.z = rz * step + at.z;
 
                       bool inr = true;
-                      if (rad_max)
+                      if (rmax)
                       {
                           int dx = pos.x;
                           int dz = pos.z;
                           int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
-                          inr = (rsq < rad_max);
+                          inr = (rsq < rmax);
                       }
                       else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
                       {
                           inr = false;
                       }
+
                       if (inr)
                       {
                           // children are combined via AND at the current position
@@ -466,10 +465,8 @@ int _testTreeAt(
                       }
                   }
                 }
-
                 rx += dx;
                 rz += dz;
-
                 if (++i == dl)
                 {
                     i = 0;
