@@ -101,7 +101,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
     ui->lineSquare->setValidator(uintval);
     ui->lineRadius->setValidator(uintval);
 
-    ui->lineSpiralStep->setValidator(new QIntValidator(1, 0xffff, this));
+    ui->lineSpiralStep->setValidator(new QIntValidator(1, INT_MAX, this));
 
     ui->lineBiomeSize->setValidator(new QIntValidator(1, INT_MAX, this));
     ui->lineTolerance->setValidator(new QIntValidator(0, 255, this));
@@ -333,10 +333,10 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         on_comboRelative_activated(initindex);
         ui->textEditLua->document()->setModified(false);
 
-        if (cond.step)
+        if (cond.step_size)
         {
-            ui->lineSpiralStep->setText(QString::number(cond.step));
-            ui->comboScale->setCurrentIndex(ui->comboScale->findData(QVariant::fromValue(cond.step)));
+            ui->lineSpiralStep->setText(QString::number(cond.step_size));
+            ui->comboScale->setCurrentIndex(ui->comboScale->findData(QVariant::fromValue(cond.step_size)));
         }
 
         ui->comboMatchBiome->insertItem(0, getBiomeDisplay(wi.mc, cond.biomeId), QVariant::fromValue(cond.biomeId));
@@ -1094,11 +1094,11 @@ void ConditionDialog::onAccept()
         c.count = ui->checkSamplePos->isChecked() ? 1 : 0;
         c.converage = ui->lineCoverage1->text().toFloat() / 100.0;
         c.confidence = ui->lineConfidence1->text().toFloat() / 100.0;
-        c.step = 0;
+        c.step_size = 0;
         if (c.type == F_BIOME || c.type == F_BIOME_NETHER || c.type == F_BIOME_END)
-            c.step = ui->comboScale->currentData().toInt();
-        if (c.type == F_BIOME_END && c.step > 64)
-            c.step = 64;
+            c.step_size = ui->comboScale->currentData().toInt();
+        if (c.type == F_BIOME_END && c.step_size > 64)
+            c.step_size = 64;
     }
     if (ui->stackedWidget->currentWidget() == ui->pageBiomeCenter)
     {
@@ -1138,7 +1138,7 @@ void ConditionDialog::onAccept()
     }
     if (ui->stackedWidget->currentWidget() == ui->pageSpiral)
     {
-        c.step = ui->lineSpiralStep->text().toUShort();
+        c.step_size = ui->lineSpiralStep->text().toUInt();
     }
 
     c.varflags = c.varstart = 0;

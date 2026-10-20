@@ -229,7 +229,7 @@ bool SearchMaster::set(QWidget *widget, const Session& s)
             }
 
             int layerId = 0;
-            int scale = c.step;
+            int scale = c.step_size;
             if (c.type == F_BIOME_4_RIVER)
             {
                 layerId = L_RIVER_4;

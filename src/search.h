@@ -579,7 +579,8 @@ struct /*__attribute__((packed))*/ Condition
         VER_2_4_0       = 2,
         VER_3_4_0       = 3,
         VER_4_0_0       = 4,
-        VER_CURRENT     = VER_4_0_0,
+        VER_5_2_0       = 5,
+        VER_CURRENT     = VER_5_2_0,
     };
     enum { // meta flags
         DISABLED        = 0x0001,
@@ -623,7 +624,7 @@ struct /*__attribute__((packed))*/ Condition
     uint8_t     minmax;
     uint8_t     para;
     uint8_t     octave;
-    uint16_t    step;
+    uint16_t    step; // legacy spiral iterator step size
     uint16_t    version; // condition data version
     uint64_t    biomeToExcl, biomeToExclM; // exclusion biomes
     int32_t     temps[9];
@@ -640,6 +641,7 @@ struct /*__attribute__((packed))*/ Condition
     float       vmax;
     float       converage;
     float       confidence;
+    uint32_t    step_size;
 
     // generated members - initialized when the search is started
     uint8_t     generated_start[0]; // address dummy
@@ -658,7 +660,7 @@ struct /*__attribute__((packed))*/ Condition
 };
 
 static_assert(
-    offsetof(Condition, generated_start) == 320,
+    offsetof(Condition, generated_start) == 324,
     "Layout of Condition has changed!"
 );
 
