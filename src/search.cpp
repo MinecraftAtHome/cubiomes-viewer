@@ -1517,7 +1517,7 @@ L_qm_any:
             else if (j >= cond->count)
             {
                 cent->x = xt / j;
-                cent->z = zt / j;:160
+                cent->z = zt / j;
                 if (imax) *imax = 1;
                 return COND_OK;
             }
