@@ -386,58 +386,81 @@ int _testTreeAt(
         st = COND_FAILED;
         {   // run a spiral iterator over the rectangle
             int step = c.step_size ? c.step_size : 512;
-            int rmax, x1, z1, x2, z2;
+            int rad_max, x1, z1, x2, z2;
             if (c.rmax > 0)
             {
-                rmax = c.rmax - 1;
-                x1 = -rmax;
-                z1 = -rmax;
-                x2 = rmax;
-                z2 = rmax;
-                rmax = rmax * rmax + 1;
+                rad_max = c.rmax - 1;
+                x1 = -rad_max;
+                z1 = -rad_max;
+                x2 = rad_max;
+                z2 = rad_max;
+                rad_max = rad_max * rad_max + 1;
             }
             else
             {
-                rmax = 0;
+                rad_max = 0;
                 x1 = c.x1;
                 z1 = c.z1;
                 x2 = c.x2;
                 z2 = c.z2;
             }
 
-            rx1 = x1;
-            rz1 = z1;
-            rx2 = x2;
-            rz2 = z2;
-
-            int rx = ((rx1 + rx2) >> 1) + c.step_skip;
-            int rz = ((rz1 + rz2) >> 1) + c.step_skip;
+            rx1 = floordiv(x1, step);
+            rz1 = floordiv(z1, step);
+            rx2 = floordiv(x2, step);
+            rz2 = floordiv(z2, step); 
+            int rx = ((rx1 + rx2) >> 1);
+            int rz = ((rz1 + rz2) >> 1);
             int i = 0, dl = 1;
             int dx = 1, dz = 0;
+            uint32_t skip = 0;
+            if(c.step_skip) {
+              while (skip < c.step_skip) {
+                rx += dx;
+                rx += dz;
+                if(++i == dl) {
+                  i = 0;
+                  int tmp = dx;
+                  dx = -dz;
+                  dz = tmp;
+                  if (dz == 0)
+                    dl++;
+                }
+                skip++;
+              }
+            }
+
             while (true)
             {
                 bool inx = (rx >= rx1 && rx <= rx2);
                 bool inz = (rz >= rz1 && rz <= rz2);
-                if (!inx && !inz)
-                    break;
+                if (!inx && !inz) {
+                  if(c.step_skip) {
+                    printf("Warning: Condition skipped enough steps to cause condition to fail immediately.\n");
+                  }
+                  break;
+                
+                }
                 if (inx && inz)
                 {
+
                     pos.x = rx * step + at.x;
                     pos.z = rz * step + at.z;
-
+                    if(c.step_skip) {
+                      //printf("pos: %d, %d\n", pos.x, pos.z);
+                    }
                     bool inr = true;
-                    if (rmax)
+                    if (rad_max)
                     {
-                        int dx = pos.x - at.x;
-                        int dz = pos.z - at.z;
+                        int dx = pos.x;
+                        int dz = pos.z;
                         int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
-                        inr = (rsq < rmax);
+                        inr = (rsq < rad_max);
                     }
                     else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
                     {
                         inr = false;
                     }
-
                     if (inr)
                     {
                         // children are combined via AND at the current position
