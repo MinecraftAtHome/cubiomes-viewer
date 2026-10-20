@@ -1943,7 +1943,7 @@ L_qm_any:
         // (except voronoi uses the full 64-bits)
         if (env->searchpass != PASS_FULL_64 && (finfo.dep64 || s == 0))
             return COND_MAYBE_POS_VALID;
-        else:160
+        else
         {
             int w = rx2 - rx1 + 1;
             int h = rz2 - rz1 + 1;
