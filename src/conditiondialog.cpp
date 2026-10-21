@@ -321,6 +321,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         ui->checkEnabled->setChecked(!(cond.meta & Condition::DISABLED));
         ui->lineSummary->setText(cond.text);
         ui->lineSummary->setPlaceholderText(QApplication::translate("Filter", ft.name));
+
         if (cond.hash && !scripts.contains(cond.hash))
             ui->comboLua->addItem(tr("[script not found]"), QVariant::fromValue(cond.hash));
         else
@@ -1030,7 +1031,6 @@ void ConditionDialog::onAccept()
 
     QByteArray text = ui->lineSummary->text().toLocal8Bit().leftJustified(sizeof(c.text), '\0');
     memcpy(c.text, text.data(), sizeof(c.text));
-    printf("Filter name: %s\n", c.text);
     c.hash = ui->comboLua->currentData().toULongLong();
 
     if (ui->radioSquare->isEnabled() && ui->radioSquare->isChecked())
