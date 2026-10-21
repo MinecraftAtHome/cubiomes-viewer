@@ -16,6 +16,7 @@
 #include <QWheelEvent>
 
 #include <math.h>
+char *qt_qpa_platform = std::getenv("QT_QPA_PLATFORM");
 
 bool MapOverlay::event(QEvent *e)
 {
@@ -603,12 +604,21 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
 {
     if ((e->buttons() & Qt::LeftButton) && holding)
     {
-        QPoint d = e->position().toPoint() - mprev;
-        focusx = focusx - d.x() / blocks2pix;
-        focusz = focusz - d.y() / blocks2pix;
-        prevx = focusx;
-        prevz = focusz;
-        mprev = e->position().toPoint();
+        QPoint pos = e->position().toPoint();
+        QPoint d = pos - mprev;
+        mprev = pos;
+
+        focusx -= d.x() / blocks2pix;
+        focusz -= d.y() / blocks2pix;
+
+        qreal dt = elapsed1.nsecsElapsed() * 1e-9;
+        if (dt > .005)
+        {
+          mtime = dt;
+          prevx = focusx;
+          prevz = focusz;
+          elapsed1.start();
+        }
         update();//repaint();
     }
 }
