@@ -16,7 +16,6 @@
 #include <QWheelEvent>
 
 #include <math.h>
-char *qt_qpa_platform = std::getenv("QT_QPA_PLATFORM");
 
 bool MapOverlay::event(QEvent *e)
 {
