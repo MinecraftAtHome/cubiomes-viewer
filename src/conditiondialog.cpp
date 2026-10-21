@@ -319,7 +319,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         const FilterInfo &ft = g_filterinfo.list[cond.type];
 
         ui->checkEnabled->setChecked(!(cond.meta & Condition::DISABLED));
-        ui->lineSummary->setText(QString::fromLocal8Bit(QByteArray(cond.text, sizeof(cond.text))));
+        ui->lineSummary->setText(cond.text);
         ui->lineSummary->setPlaceholderText(QApplication::translate("Filter", ft.name));
 
         if (cond.hash && !scripts.contains(cond.hash))
