@@ -607,7 +607,10 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
         QPoint pos = e->position().toPoint();
         QPoint d = pos - mprev;
         mprev = pos;
-
+        
+        prevx = focusx;
+        prevz = focusz;
+        
         focusx -= d.x() / blocks2pix;
         focusz -= d.y() / blocks2pix;
 
@@ -615,8 +618,6 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
         if (dt > .005)
         {
           mtime = dt;
-          prevx = focusx;
-          prevz = focusz;
           elapsed1.start();
         }
         update();//repaint();
