@@ -1031,6 +1031,7 @@ void ConditionDialog::onAccept()
 
     QByteArray text = ui->lineSummary->text().toLocal8Bit().leftJustified(sizeof(c.text), '\0');
     memcpy(c.text, text.data(), sizeof(c.text));
+
     c.hash = ui->comboLua->currentData().toULongLong();
 
     if (ui->radioSquare->isEnabled() && ui->radioSquare->isChecked())
