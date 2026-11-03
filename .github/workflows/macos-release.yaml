@@ -16,13 +16,18 @@ env:
 
 jobs:
   build-macos:
-    runs-on: macos-latest
+    runs-on: [self-hosted, macOS, ARM64]
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
         with:
           submodules: recursive
+
+      - name: Setup python venv
+        run: |
+            python3 -m venv .venv
+            echo "$PWD/.venv/bin" >> $GITHUB_PATH
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -31,6 +36,7 @@ jobs:
           version:      '6.11.2'
           archives:     'x86_64 arm64 qtbase qttools'
           cache:        true
+          setup-python: false
 
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
