@@ -101,7 +101,8 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
     ui->lineSquare->setValidator(uintval);
     ui->lineRadius->setValidator(uintval);
 
-    ui->lineSpiralStep->setValidator(new QIntValidator(1, 0xffff, this));
+    ui->lineSpiralStep->setValidator(new QIntValidator(1, INT_MAX, this));
+    ui->lineSpiralSkip->setValidator(new QIntValidator(0, INT_MAX, this));
 
     ui->lineBiomeSize->setValidator(new QIntValidator(1, INT_MAX, this));
     ui->lineTolerance->setValidator(new QIntValidator(0, 255, this));
@@ -318,7 +319,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         const FilterInfo &ft = g_filterinfo.list[cond.type];
 
         ui->checkEnabled->setChecked(!(cond.meta & Condition::DISABLED));
-        ui->lineSummary->setText(QString::fromLocal8Bit(QByteArray(cond.text, sizeof(cond.text))));
+        ui->lineSummary->setText(cond.text);
         ui->lineSummary->setPlaceholderText(QApplication::translate("Filter", ft.name));
 
         if (cond.hash && !scripts.contains(cond.hash))
@@ -333,10 +334,14 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         on_comboRelative_activated(initindex);
         ui->textEditLua->document()->setModified(false);
 
-        if (cond.step)
+        if (cond.step_size)
         {
-            ui->lineSpiralStep->setText(QString::number(cond.step));
-            ui->comboScale->setCurrentIndex(ui->comboScale->findData(QVariant::fromValue(cond.step)));
+            ui->lineSpiralStep->setText(QString::number(cond.step_size));
+            ui->comboScale->setCurrentIndex(ui->comboScale->findData(QVariant::fromValue(cond.step_size)));
+        }
+
+        if (cond.step_skip) {
+            ui->lineSpiralSkip->setText(QString::number(cond.step_skip));
         }
 
         ui->comboMatchBiome->insertItem(0, getBiomeDisplay(wi.mc, cond.biomeId), QVariant::fromValue(cond.biomeId));
@@ -426,7 +431,7 @@ ConditionDialog::ConditionDialog(FormConditions *parent, MapView *mapview, Confi
         ui->checkAbandoned->setCheckState(totristate(cond.varflags, Condition::VAR_ABANODONED));
         ui->checkEndShip->setCheckState(totristate(cond.varflags, Condition::VAR_ENDSHIP));
         ui->checkBasement->setCheckState(totristate(cond.varflags, Condition::VAR_BASEMENT));
-        for (VariantCheckBox *cb : qAsConst(variantboxes))
+        for (VariantCheckBox *cb : std::as_const(variantboxes))
         {
             int idx = cb->sp - g_start_pieces;
             cb->setChecked(cond.varstart & (1ULL << idx));
@@ -1094,11 +1099,11 @@ void ConditionDialog::onAccept()
         c.count = ui->checkSamplePos->isChecked() ? 1 : 0;
         c.converage = ui->lineCoverage1->text().toFloat() / 100.0;
         c.confidence = ui->lineConfidence1->text().toFloat() / 100.0;
-        c.step = 0;
+        c.step_size = 0;
         if (c.type == F_BIOME || c.type == F_BIOME_NETHER || c.type == F_BIOME_END)
-            c.step = ui->comboScale->currentData().toInt();
-        if (c.type == F_BIOME_END && c.step > 64)
-            c.step = 64;
+            c.step_size = ui->comboScale->currentData().toInt();
+        if (c.type == F_BIOME_END && c.step_size > 64)
+            c.step_size = 64;
     }
     if (ui->stackedWidget->currentWidget() == ui->pageBiomeCenter)
     {
@@ -1138,7 +1143,8 @@ void ConditionDialog::onAccept()
     }
     if (ui->stackedWidget->currentWidget() == ui->pageSpiral)
     {
-        c.step = ui->lineSpiralStep->text().toUShort();
+        c.step_size = ui->lineSpiralStep->text().toUInt();
+        c.step_skip = ui->lineSpiralSkip->text().toUInt();
     }
 
     c.varflags = c.varstart = 0;
@@ -1150,7 +1156,7 @@ void ConditionDialog::onAccept()
     c.varflags |= tristateFlags(ui->checkEndShip, Condition::VAR_ENDSHIP);
     c.varflags |= tristateFlags(ui->checkBasement, Condition::VAR_BASEMENT);
 
-    for (VariantCheckBox *cb : qAsConst(variantboxes))
+    for (VariantCheckBox *cb : std::as_const(variantboxes))
     {
         if (!cb->isChecked())
             continue;

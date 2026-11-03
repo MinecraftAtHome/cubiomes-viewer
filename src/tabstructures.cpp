@@ -64,7 +64,7 @@ void AnalysisStructures::runStructs(Generator *g)
         int stype = mapopt2stype(sopt);
         st.clear();
         StructureConfig sconf;
-        if (!getStructureConfig_override(stype, wi.mc, &sconf))
+        if (!getStructureConfig(stype, wi.mc, &sconf))
             continue;
 
         if (dim != DIM_UNDEF && dim != sconf.dim)
@@ -374,7 +374,7 @@ void TabStructures::onBufferTimeout()
         ui->treeQuads->setSortingEnabled(false);
         ui->treeQuads->setUpdatesEnabled(false);
         ui->treeQuads->addTopLevelItems(qbufq);
-        for (QTreeWidgetItem *item: qAsConst(qbufq))
+        for (QTreeWidgetItem *item: std::as_const(qbufq))
             item->setExpanded(true);
         ui->treeQuads->setUpdatesEnabled(true);
         ui->treeQuads->setSortingEnabled(true);

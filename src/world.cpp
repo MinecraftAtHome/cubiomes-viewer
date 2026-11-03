@@ -464,7 +464,7 @@ void Quad::run()
             int z0 = tj*blocks, z1 = (tj+1)*blocks;
             std::vector<VarPos>* st = new std::vector<VarPos>();
             StructureConfig sconf;
-            if (getStructureConfig_override(structureType, wi.mc, &sconf))
+            if (getStructureConfig(structureType, wi.mc, &sconf))
                 getStructs(st, sconf, wi, dim, x0, z0, x1, z1, lopt.mode == LOPT_STRUCTS);
             spos = st;
         }
@@ -1269,7 +1269,7 @@ void QWorld::draw(QPainter& painter, int vw, int vh, qreal focusx, qreal focusz,
 
     if (showBB && blocks2pix >= 1.0 && qsinfo && dim == 0)
     {
-        for (QuadInfo qi : qAsConst(*qsinfo))
+        for (QuadInfo qi : std::as_const(*qsinfo))
         {
             if (qi.typ == Swamp_Hut && !sshow[D_HUT])
                 continue;

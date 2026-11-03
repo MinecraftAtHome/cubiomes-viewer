@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "cubiomes/features/end_city.h"
+#include "cubiomes/features/fortress.h"
 #include "cubiomes/finders.h"
 
 #include <QSettings>
@@ -120,6 +122,7 @@ enum {
     D_ANCIENTCITY,
     D_TRAILRUINS,
     D_CHAMBERS,
+    D_CAMP,
     D_PORTAL,
     D_PORTALN,
     D_FORTESS,

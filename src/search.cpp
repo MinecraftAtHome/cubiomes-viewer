@@ -58,9 +58,9 @@ QString Condition::summary(bool aligntab) const
             else
                 txts += ": " + QApplication::translate("Filter", "[script missing]");
         }
-        else if (step)
+        else if (step_size)
         {
-            txts += QString(" 1:%1").arg(step);
+            txts += QString(" 1:%1").arg(step_size);
         }
     }
 
@@ -166,7 +166,10 @@ bool Condition::versionUpgrade()
             z2 = (z2+1) * mult - 1;
         }
     }
-
+    if (version < VER_5_2_0) {
+      step_size = (uint32_t)step;
+      step_skip = 0;
+    }
     version = VER_CURRENT;
     return true;
 }
@@ -382,7 +385,7 @@ int _testTreeAt(
 
         st = COND_FAILED;
         {   // run a spiral iterator over the rectangle
-            int step = c.step ? c.step : 512;
+            int step = c.step_size ? c.step_size : 512;
             int rmax, x1, z1, x2, z2;
             if (c.rmax > 0)
             {
@@ -402,62 +405,65 @@ int _testTreeAt(
                 z2 = c.z2 + at.z;
             }
 
-            rx1 = floordiv(x1, step);
-            rz1 = floordiv(z1, step);
-            rx2 = floordiv(x2, step);
-            rz2 = floordiv(z2, step);
-
-            int rx = (rx1 + rx2) >> 1;
-            int rz = (rz1 + rz2) >> 1;
+            rx1 = x1;
+            rz1 = z1;
+            rx2 = x2;
+            rz2 = z2;
+            int rx = ((rx1 + rx2) >> 1);
+            int rz = ((rz1 + rz2) >> 1);
             int i = 0, dl = 1;
-            int dx = 1, dz = 0;
+            int dx = step, dz = 0;
+            uint32_t step_iter = 0;
             while (true)
             {
                 bool inx = (rx >= rx1 && rx <= rx2);
                 bool inz = (rz >= rz1 && rz <= rz2);
-                if (!inx && !inz)
+                if(step_iter >= c.step_skip) {
+                  if (!inx && !inz) {
                     break;
-                if (inx && inz)
-                {
-                    pos.x = rx * step;
-                    pos.z = rz * step;
+                  }
+                  if (inx && inz)
+                  {
+                      pos.x = rx;
+                      pos.z = rz;
 
-                    bool inr = true;
-                    if (rmax)
-                    {
-                        int dx = pos.x - at.x;
-                        int dz = pos.z - at.z;
-                        int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
-                        inr = (rsq < rmax);
-                    }
-                    else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
-                    {
-                        inr = false;
-                    }
+                      bool inr = true;
+                      if (rmax)
+                      {
+                          int dx = pos.x;
+                          int dz = pos.z;
+                          int64_t rsq = dx*(int64_t)dx + dz*(int64_t)dz;
+                          inr = (rsq < rmax);
+                      }
+                      else if (pos.x < x1 || pos.x > x2 || pos.z < z1 || pos.z > z2)
+                      {
+                          inr = false;
+                      }
 
-                    if (inr)
-                    {
-                        // children are combined via AND at the current position
-                        int sta = COND_OK;
-                        for (int b : branches)
-                        {
-                            int stb = _testTreeAt(pos, env, path, b);
-                            if (*env->stop)
-                                return COND_FAILED;
-                            if (stb < sta)
-                                sta = stb;
-                            if (sta == COND_FAILED)
-                                break;
-                        }
-                        if (sta == COND_MAYBE_POS_VALID )
-                            sta = COND_MAYBE_POS_INVAL; // position moves => invalidate
-                        if (sta > st)
-                            st = sta;
-                        if (path && st >= COND_MAYBE_POS_VALID)
-                            path[c.save] = pos;
-                        if (st == COND_OK)
-                            return COND_OK;
-                    }
+                      if (inr)
+                      {
+                          // children are combined via AND at the current position
+                          int sta = COND_OK;
+                          for (int b : branches)
+                          {
+                              int stb = _testTreeAt(pos, env, path, b);
+                              if (*env->stop)
+                                  return COND_FAILED;
+                              if (stb < sta)
+                                  sta = stb;
+                              if (sta == COND_FAILED)
+                                  break;
+                          }
+                          if (sta == COND_MAYBE_POS_VALID )
+                              sta = COND_MAYBE_POS_INVAL; // position moves => invalidate
+                          if (sta > st)
+                              st = sta;
+                          if (path && st >= COND_MAYBE_POS_VALID)
+                              path[c.save] = pos;
+                          if (st == COND_OK)
+                              return COND_OK;
+                      }
+                  }
                 }
                 rx += dx;
                 rz += dz;
@@ -470,6 +476,7 @@ int _testTreeAt(
                     if (dz == 0)
                         dl++;
                 }
+                step_iter++;
             }
         }
         return st;
@@ -1099,7 +1106,7 @@ testCondAt(
 
     if ((st = finfo.stype) > 0)
     {
-        if (!getStructureConfig_override(finfo.stype, env->mc, &sconf))
+        if (!getStructureConfig(finfo.stype, env->mc, &sconf))
             return COND_FAILED;
     }
     else memset(&sconf, 0, sizeof(sconf)); // never relevant, but clang-analyzer complains
@@ -1276,6 +1283,7 @@ L_qm_any:
     case F_ANCIENT_CITY:
     case F_TRAILS:
     case F_CHAMBERS:
+    case F_CAMP:
 
     case F_FORTRESS:
     case F_BASTION:
@@ -2169,7 +2177,7 @@ L_qm_any:
 void findQuadStructs(int styp, Generator *g, QVector<QuadInfo> *out)
 {
     StructureConfig sconf;
-    if (!getStructureConfig_override(styp, g->mc, &sconf))
+    if (!getStructureConfig(styp, g->mc, &sconf))
         return;
 
     int qmax = 1000;

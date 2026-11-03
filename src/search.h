@@ -3,7 +3,7 @@
 
 #include "cubiomes/finders.h"
 
-#include "lua/src/lua.hpp"
+#include "lua.hpp"
 
 #include <QVector>
 #include <QString>
@@ -92,6 +92,7 @@ enum
     F_BIOME_SAMPLE,
     F_NOISE_SAMPLE,
     F_CHAMBERS,
+    F_CAMP,
     // new filters should be added here at the end to keep some downwards compatibility
     FILTER_MAX,
 };
@@ -512,6 +513,13 @@ static const struct FilterList : private FilterInfo
             ""
         };
 
+        list[F_CAMP] = FilterInfo{
+            CAT_STRUCT, 0, LOC_RAD, Abandoned_Camp, 1, BR_CLUST, MC_26_3, MC_NEWEST, 0, 0, disp++,
+            "camp",
+            QT_TRANSLATE_NOOP("Filter", "Abandoned Camps"),
+            ""
+        };
+
         list[F_PORTAL] = FilterInfo{
             CAT_STRUCT, 0, LOC_RAD, Ruined_Portal, 1, BR_CLUST, MC_1_16_1, MC_NEWEST, 0, 0, disp++,
             "portal",
@@ -571,7 +579,8 @@ struct /*__attribute__((packed))*/ Condition
         VER_2_4_0       = 2,
         VER_3_4_0       = 3,
         VER_4_0_0       = 4,
-        VER_CURRENT     = VER_4_0_0,
+        VER_5_2_0       = 5,
+        VER_CURRENT     = VER_5_2_0,
     };
     enum { // meta flags
         DISABLED        = 0x0001,
@@ -615,7 +624,7 @@ struct /*__attribute__((packed))*/ Condition
     uint8_t     minmax;
     uint8_t     para;
     uint8_t     octave;
-    uint16_t    step;
+    uint16_t    step; // legacy spiral iterator step size
     uint16_t    version; // condition data version
     uint64_t    biomeToExcl, biomeToExclM; // exclusion biomes
     int32_t     temps[9];
@@ -632,6 +641,8 @@ struct /*__attribute__((packed))*/ Condition
     float       vmax;
     float       converage;
     float       confidence;
+    uint32_t    step_size;
+    uint32_t    step_skip;
 
     // generated members - initialized when the search is started
     uint8_t     generated_start[0]; // address dummy
@@ -650,7 +661,7 @@ struct /*__attribute__((packed))*/ Condition
 };
 
 static_assert(
-    offsetof(Condition, generated_start) == 320,
+    offsetof(Condition, generated_start) == 328,
     "Layout of Condition has changed!"
 );
 

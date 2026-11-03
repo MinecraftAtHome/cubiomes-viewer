@@ -6,6 +6,9 @@ on:
       - 'trunk'
     tags:
       - 'v*'
+  pull_request:
+    branches:
+     - 'trunk'
 
 defaults:
   run:
@@ -17,43 +20,45 @@ env:
 
 
 jobs:
-  build:
-    runs-on: windows-2019
-
+  build-windows:
+    runs-on: windows-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
-
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
-          aqtversion:   '==3.1.*'
-          version:      '5.15.2'
-          host:         'windows'
-          target:       'desktop'
-          arch:         'win64_mingw81'
-          archives:     'x86_64 qtbase qttools'
-          cache:        true
+          aqtsource: git+https://github.com/miurahr/aqtinstall.git@076e1659807d0b362a3ed684d54c2e9c775eb9c7
+          version:      '6.11.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw'
+          archives: 'qtbase qttools'
+          cache: true
           setup-python: false
-
+          tools: 'tools_mingw1310'
       - name: Build
         working-directory: ${{env.SOURCE_DIR}}
+        env:
+          CMAKE_GENERATOR: MinGW Makefiles
+          CC: gcc
+          CXX: g++
         run:  |
-              qmake CONFIG+=release ${{env.SOURCE_DIR}}
+              qmake6 CONFIG+=release ${{env.SOURCE_DIR}}
               mingw32-make
-              
+
       - name: Deploy
         working-directory: ${{env.SOURCE_DIR}}
         run:  |
               mkdir ${{env.PROG}}
               copy ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe ${{env.PROG}}
-              windeployqt --dir ${{env.PROG}} ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle
+              windeployqt6 --dir ${{env.PROG}} ${{env.SOURCE_DIR}}\release\${{env.PROG}}.exe --compiler-runtime --no-translations --no-system-d3d-compiler --no-opengl-sw
               ${{env.SOURCE_DIR}}\${{env.PROG}}\${{env.PROG}}.exe --version
 
       - name: Save build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.PROG}}-win
           path: ${{env.SOURCE_DIR}}\${{env.PROG}}

@@ -255,6 +255,7 @@ lua_State *loadScript(QString path, QString *err)
             {End_City, "End_City"},
             {End_Gateway, "End_Gateway"},
             {Ancient_City, "Ancient_City"},
+            {Abandoned_Camp, "Abandoned_Camp"}
         };
         for (size_t i = 0; i < sizeof(values)/sizeof(values[0]); i++)
         {
@@ -482,7 +483,7 @@ void LuaHighlighter::highlightBlock(const QString& text)
     else
         setCurrentBlockState(-1);
 
-    for (const Rule &rule : qAsConst(rules))
+    for (const Rule &rule : std::as_const(rules))
     {
         const QString *l = rule.overlay ? &text : &line;
         QRegularExpressionMatch m = rule.pattern.match(*l);

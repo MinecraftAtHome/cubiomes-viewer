@@ -421,14 +421,14 @@ void MapView::showContextMenu(const QPoint &pos)
             wmax = w;
     }
 
-    menu->addAction(tr("Go to coordinates..."), this, &MapView::onGoto, QKeySequence(Qt::CTRL + Qt::Key_G));
+    menu->addAction(tr("Go to coordinates..."), QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_G)), this, &MapView::onGoto);
     if (world)
     {
         QString txt = tr("Copy seed:");
         while (txtWidth(menu->fontMetrics(), txt + " ") < wmax)
             txt += " ";
         txt += QString::asprintf("%" PRId64, (int64_t)world->wi.seed);
-        menu->addAction(txt, this, &MapView::copySeed, QKeySequence::Copy);
+        menu->addAction(txt, QKeySequence::Copy, this, &MapView::copySeed);
     }
     for (auto& it : cpy_dat)
     {
@@ -575,7 +575,7 @@ void MapView::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton)
     {
-        mprev = mstart = e->pos();
+        mprev = mstart = e->position().toPoint();
         holding = true;
         prevx = focusx = getX();
         prevz = focusz = getZ();
@@ -603,18 +603,22 @@ void MapView::mouseMoveEvent(QMouseEvent *e)
 {
     if ((e->buttons() & Qt::LeftButton) && holding)
     {
-        QPoint d = e->pos() - mprev;
+        QPoint pos = e->position().toPoint();
+        QPoint d = pos - mprev;
+        mprev = pos;
+        
+        prevx = focusx;
+        prevz = focusz;
+        
+        focusx -= d.x() / blocks2pix;
+        focusz -= d.y() / blocks2pix;
+
         qreal dt = elapsed1.nsecsElapsed() * 1e-9;
         if (dt > .005)
         {
-            mtime = dt;
-            prevx = focusx;
-            prevz = focusz;
-            focusx = focusx - d.x() / blocks2pix;
-            focusz = focusz - d.y() / blocks2pix;
-            elapsed1.start();
+          mtime = dt;
+          elapsed1.start();
         }
-        mprev = e->pos();
         update();//repaint();
     }
 }
@@ -627,7 +631,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *e)
         if (mtime > .0)
         {
             elapsed1.start();
-            QPoint d = e->pos() - mprev;
+            QPoint d = e->position().toPoint() - mprev;
             focusx = focusx - d.x() / blocks2pix;
             focusz = focusz - d.y() / blocks2pix;
             velx = (focusx - prevx) / mtime;
@@ -643,9 +647,9 @@ void MapView::mouseReleaseEvent(QMouseEvent *e)
         if (!(e->modifiers() & Qt::ShiftModifier))
             measure = false;
         holding = false;
-        mprev = e->pos();
+        mprev = e->position().toPoint();
 
-        if (world && e->pos() == mstart)
+        if (world && e->position().toPoint() == mstart)
         {
             world->setSelectPos(mstart);
         }

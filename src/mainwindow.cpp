@@ -128,7 +128,7 @@ MainWindow::MainWindow(QString sessionpath, QString resultspath, QWidget *parent
     for (int i = 0; i <= 9; i++)
     {
         QAction *act = new QAction(this);
-        act->setShortcut(QKeySequence(Qt::ALT+Qt::Key_0+i));
+        act->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, static_cast<Qt::Key>(Qt::Key_0+i))));
         act->setEnabled(true);
         connect(act, &QAction::triggered, [=](){
             this->onActionBiomeLayerSelect(lopt.mode, i);
@@ -184,13 +184,14 @@ MainWindow::MainWindow(QString sessionpath, QString resultspath, QWidget *parent
     addMapAction(D_ANCIENTCITY);
     addMapAction(D_TRAILRUINS);
     addMapAction(D_CHAMBERS);
+    addMapAction(D_CAMP);
     ui->toolBar->addSeparator();
     addMapAction(D_FORTESS);
     addMapAction(D_BASTION);
     ui->toolBar->addSeparator();
     addMapAction(D_ENDCITY);
     addMapAction(D_GATEWAY);
-
+    
     saction[D_GRID]->setChecked(true);
 
     ui->splitterMap->setSizes(QList<int>({750, 1000}));
@@ -323,7 +324,7 @@ bool MainWindow::loadTranslation(QString lang)
         return false;
     QLocale::setDefault(QLocale(lang));
     QString qt_locale = "qtbase_" + lang;
-    QString qt_trpath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QString qt_trpath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     if (qt_translator.load(qt_locale, qt_trpath))
         qApp->installTranslator(&qt_translator);
     qApp->installTranslator(&rc_translator);
@@ -1214,7 +1215,7 @@ void MainWindow::onUpdateConfig()
         QApplication::setFont(fnorm);
 
         QWidgetList wlist = QApplication::allWidgets();
-        for (QWidget *w : qAsConst(wlist))
+        for (QWidget *w : std::as_const(wlist))
         {
             const QFont& f = w->font();
             if (f.styleHint() == QFont::Monospace || f.family() == "Monospace")
@@ -1226,7 +1227,7 @@ void MainWindow::onUpdateConfig()
         QSize iconsize = QSize((int)round(14 * g_fontscale), (int)round(14 * g_fontscale));
 
         // update cascade
-        for (QWidget *w : qAsConst(wlist))
+        for (QWidget *w : std::as_const(wlist))
         {
             if (QAbstractButton *b = qobject_cast<QAbstractButton*>(w))
                 b->setIconSize(iconsize);
