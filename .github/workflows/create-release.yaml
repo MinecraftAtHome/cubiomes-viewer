@@ -62,7 +62,7 @@ jobs:
 
 
   build-macos:
-      runs-on: macos-latest
+      runs-on: [self-hosted, macOS, ARM64]
 
       steps:
         - name: Checkout repo
