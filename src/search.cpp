@@ -971,7 +971,7 @@ static int f_track_minmax(void *data, int x, int z, double p)
 }
 
 
-struct sample_boime_t
+struct sample_biome_t
 {
     const Condition *cond;
     Pos at;
@@ -986,7 +986,7 @@ struct sample_boime_t
 
 static int f_biome_sampler(Generator *g, int scale, int x, int y, int z, void *data)
 {
-    sample_boime_t *info = (sample_boime_t*) data;
+    sample_biome_t *info = (sample_biome_t*) data;
     if (info->stop && *info->stop)
         return -2;
     if (info->rmaxsq)
@@ -1028,7 +1028,7 @@ static int f_biome_sampler(Generator *g, int scale, int x, int y, int z, void *d
 static int f_noise_sampler(Generator *g, int scale, int x, int y, int z, void *data)
 {
     (void) y;
-    sample_boime_t *info = (sample_boime_t*) data;
+    sample_biome_t *info = (sample_biome_t*) data;
     if (info->stop && *info->stop)
         return -2;
     if (info->rmaxsq)
@@ -1803,7 +1803,7 @@ L_qm_any:
             int w = rx2 - rx1 + 1;
             int h = rz2 - rz1 + 1;
             Range r = {1<<s, rx1, rz1, w, h, s == 0 ? cond->y : cond->y >> 2, 1};
-            sample_boime_t sample;
+            sample_biome_t sample;
             sample.cond = cond;
             sample.at = at;
             sample.rmaxsq = rmax;
